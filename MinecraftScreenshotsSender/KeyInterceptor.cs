@@ -8,84 +8,43 @@ public class KeyInterceptor
 {
     private const int WhKeyboardLl = 13;
     private const int WmKeydown = 0x0100;
-    private static readonly LowLevelKeyboardProc Proc = HookCallback;
-    private static IntPtr _hookId = IntPtr.Zero;
+    private readonly IntPtr _hookId;
+    private readonly FindHostedProcess _findHostedProcess;
 
     public KeyInterceptor()
     {
-        // new Thread(() => 
-        // {
-        // Thread.CurrentThread.IsBackground = true; 
-        _hookId = SetHook(Proc);
-        // }).Start();
+        _findHostedProcess = new FindHostedProcess();
+        _hookId = SetHook(HookCallback);
     }
     
     ~KeyInterceptor()
     {
         UnhookWindowsHookEx(_hookId);
     }
-
-    // TODO: detect closed Minecraft
+    
     private static IntPtr SetHook(LowLevelKeyboardProc proc)
     {
-        var openWindowProvider = new OpenWindowProvider();
-        var openWindows = openWindowProvider.GetOpenWindows();
-        
-        foreach (var (key, value) in openWindows)
-        {
-            if (value.Contains("Minecraft") && !value.Contains("MinecraftScreenshotsSender"))
-            {
-                IntPtr pid = IntPtr.Zero;
-                uint windowThreadProcessId = GetWindowThreadProcessId(key, out pid);
-                Process p = Process.GetProcessById((int) pid);
-                var mainModuleFileName = p.MainModule.FileName;
-                // TODO: https://stackoverflow.com/questions/39702704/connecting-uwp-apps-hosted-by-applicationframehost-to-their-real-processes
-                
-
-                return SetWindowsHookEx(WhKeyboardLl, proc, GetModuleHandle(mainModuleFileName), windowThreadProcessId);
-            }
-        }
-
-        return IntPtr.Zero;
+        return SetWindowsHookEx(WhKeyboardLl, proc, IntPtr.Zero, 0);
     }
-
-    private static IntPtr GetHMod(string processName)
-    {
-        Process[] processes = Process.GetProcesses();
-        foreach (Process process in processes)
-        {
-            Console.WriteLine(process.ProcessName);
     
-            if (process.ProcessName.Contains(processName) && !process.ProcessName.Contains("MinecraftScreenshotsSender"))
-            {
-                using (ProcessModule currentModule = process.MainModule)
-                {
-                    return GetModuleHandle(currentModule.ModuleName);
-                }
-            }
-        }
-
-        return IntPtr.Zero;
-    }
-
     // private static IntPtr SetHook(LowLevelKeyboardProc proc)
     // {
-    //     Process[] processes = Process.GetProcesses();
-    //     foreach (Process process in processes)
+    //     var openWindowProvider = new OpenWindowProvider();
+    //     var openWindows = openWindowProvider.GetOpenWindows();
+    //     
+    //     foreach (var (windowHandler, windowTitle) in openWindows)
     //     {
-    //         Console.WriteLine(process.ProcessName);
-    //         
-    //         if (process.ProcessName.Contains("Minecraft"))
+    //         if (windowTitle.Contains("Minecraft") && !windowTitle.Contains("MinecraftScreenshotsSender"))
     //         {
-    //             IntPtr test = IntPtr.Zero;
-    //             var processMainWindowHandle = process.MainWindowHandle;
-    //             uint windowThreadProcessId = GetWindowThreadProcessId(processMainWindowHandle, out test);
+    //             IntPtr pid = IntPtr.Zero;
+    //             uint windowThreadProcessId = GetWindowThreadProcessId(windowHandler, out pid);
+    //             Process p = Process.GetProcessById((int) pid);
+    //             var storeModuleFileName = p.MainModule.FileName;
     //
-    //             using (ProcessModule currentModule = process.MainModule)
-    //             {
-    //                 // 4 Java devs - when key is pressed (event) then call method which is situated by proc reference/pointer
-    //                 return SetWindowsHookEx(WhKeyboardLl, proc, GetModuleHandle(currentModule.ModuleName), 0);
-    //             }
+    //             var realProcess = _findHostedProcess.GetRealProcess(p);
+    //             string mainModuleFileName = realProcess.MainModule.FileName;
+    //             
+    //             return SetWindowsHookEx(WhKeyboardLl, proc, GetModuleHandle(mainModuleFileName), Convert.ToUInt32(realProcess.Id));
     //         }
     //     }
     //
@@ -94,22 +53,29 @@ public class KeyInterceptor
 
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-    private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
+    private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        
-        if (nCode >= 0 && wParam == (IntPtr) WmKeydown) 
+        Process processTest = _findHostedProcess.GetProcessTest();
+        string processTestMainWindowTitle = processTest.MainWindowTitle;
+
+        if (processTestMainWindowTitle.Contains("Minecraft") && !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
         {
-            int keyCode = Marshal.ReadInt32(lParam);
-            Keys code = (Keys)keyCode;
-            Console.WriteLine(code);
+            if (nCode >= 0 && wParam == WmKeydown) 
+            {
+                int keyCode = Marshal.ReadInt32(lParam);
+                Keys code = (Keys)keyCode;
+                
+                Console.WriteLine(code); // TODO: send screenshot to Telegram
+                // TODO1: find place where screenpresso stores screenshots
+                // TODO2: get last screenshot
+                // TODO3: send to TG
+                
+                // TODO4*: check if selected area is inside Minecraft Window coordinates 
+            }
         }
 
         return CallNextHookEx(_hookId, nCode, wParam, lParam);
     }
-    
-    
-    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern IntPtr GetWindowModuleFileName(IntPtr hWnd, [Out] StringBuilder lpBaseName, uint cchFileNameMax);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -120,10 +86,4 @@ public class KeyInterceptor
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     private static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    private static extern IntPtr GetModuleHandle(string lpModuleName);
-    
-    [DllImport("user32.dll")]
-    static extern uint GetWindowThreadProcessId(IntPtr hWnd, out IntPtr processId);
 }
