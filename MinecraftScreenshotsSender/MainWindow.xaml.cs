@@ -16,10 +16,11 @@ namespace MinecraftScreenshotsSender;
 /// </summary>
 public partial class MainWindow : Window
 {
+    private readonly KeyInterceptor _keyInterceptor;
     public MainWindow()
     {
         InitializeComponent();
-
-        KeyInterceptor keyInterceptor = new KeyInterceptor();
+        
+        _keyInterceptor = new KeyInterceptor();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace MinecraftScreenshotsSender;
 
@@ -10,11 +9,13 @@ public class KeyInterceptor
     private const int WmKeydown = 0x0100;
     private readonly IntPtr _hookId;
     private readonly FindHostedProcess _findHostedProcess;
+    private LowLevelKeyboardProc _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
 
     public KeyInterceptor()
     {
+        _proc = HookCallback;
         _findHostedProcess = new FindHostedProcess();
-        _hookId = SetHook(HookCallback);
+        _hookId = SetHook(_proc);
     }
     
     ~KeyInterceptor()
@@ -26,30 +27,6 @@ public class KeyInterceptor
     {
         return SetWindowsHookEx(WhKeyboardLl, proc, IntPtr.Zero, 0);
     }
-    
-    // private static IntPtr SetHook(LowLevelKeyboardProc proc)
-    // {
-    //     var openWindowProvider = new OpenWindowProvider();
-    //     var openWindows = openWindowProvider.GetOpenWindows();
-    //     
-    //     foreach (var (windowHandler, windowTitle) in openWindows)
-    //     {
-    //         if (windowTitle.Contains("Minecraft") && !windowTitle.Contains("MinecraftScreenshotsSender"))
-    //         {
-    //             IntPtr pid = IntPtr.Zero;
-    //             uint windowThreadProcessId = GetWindowThreadProcessId(windowHandler, out pid);
-    //             Process p = Process.GetProcessById((int) pid);
-    //             var storeModuleFileName = p.MainModule.FileName;
-    //
-    //             var realProcess = _findHostedProcess.GetRealProcess(p);
-    //             string mainModuleFileName = realProcess.MainModule.FileName;
-    //             
-    //             return SetWindowsHookEx(WhKeyboardLl, proc, GetModuleHandle(mainModuleFileName), Convert.ToUInt32(realProcess.Id));
-    //         }
-    //     }
-    //
-    //     return IntPtr.Zero;
-    // }
 
     private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
