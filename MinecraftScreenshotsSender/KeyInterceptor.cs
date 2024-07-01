@@ -5,16 +5,20 @@ namespace MinecraftScreenshotsSender;
 
 public class KeyInterceptor
 {
+    public delegate void PrintScreenHandler();
+
+    public event PrintScreenHandler OnPrintScreen;
+    
     private const int WhKeyboardLl = 13;
     private const int WmKeydown = 0x0100;
     private readonly IntPtr _hookId;
-    private readonly FindHostedProcess _findHostedProcess;
+    private readonly HostedProcessFinder _hostedProcessFinder;
     private LowLevelKeyboardProc _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
-
+    
     public KeyInterceptor()
     {
         _proc = HookCallback;
-        _findHostedProcess = new FindHostedProcess();
+        _hostedProcessFinder = new HostedProcessFinder();
         _hookId = SetHook(_proc);
     }
     
@@ -32,22 +36,21 @@ public class KeyInterceptor
 
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
-        Process processTest = _findHostedProcess.GetProcessTest();
-        string processTestMainWindowTitle = processTest.MainWindowTitle;
+        Process hostedProcess = _hostedProcessFinder.Find();
+        string processTestMainWindowTitle = hostedProcess.MainWindowTitle;
 
+        // TODO: get rid of second part in condition
         if (processTestMainWindowTitle.Contains("Minecraft") && !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
         {
             if (nCode >= 0 && wParam == WmKeydown) 
             {
                 int keyCode = Marshal.ReadInt32(lParam);
-                Keys code = (Keys)keyCode;
-                
-                Console.WriteLine(code); // TODO: send screenshot to Telegram
-                // TODO1: find place where screenpresso stores screenshots
-                // TODO2: get last screenshot
-                // TODO3: send to TG
-                
-                // TODO4*: check if selected area is inside Minecraft Window coordinates 
+                Keys code = (Keys) keyCode;
+                if (code == Keys.PrintScreen)
+                {
+                    // TODO: check if event has no subscribers
+                    OnPrintScreen();
+                }
             }
         }
 

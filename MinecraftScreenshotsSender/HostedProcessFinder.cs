@@ -3,11 +3,9 @@
 namespace MinecraftScreenshotsSender;
 
 // https://stackoverflow.com/questions/39702704/connecting-uwp-apps-hosted-by-applicationframehost-to-their-real-processes
-public class FindHostedProcess
+public class HostedProcessFinder
 {
-    private Process _realProcess;
-
-    public Process GetProcessTest()
+    public Process Find()
     {
         return Process.GetProcessById(WinApiFunctions.GetWindowProcessId(WinApiFunctions.GetforegroundWindow()));
     }
