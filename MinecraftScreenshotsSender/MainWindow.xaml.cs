@@ -14,15 +14,15 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var screenshotsPathProvider = new ScreenshotsPathProvider();
-
-        _keyInterceptor = new KeyInterceptor();
-        _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler(() =>
-        {
-            var path = screenshotsPathProvider.GetPath();
+        ScreenshotProvider screenshotProvider = new ScreenshotProvider();
+        screenshotProvider.Provide();
+        
+        // _keyInterceptor = new KeyInterceptor();
+        // _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler(() =>
+        // {
             // TODO2: get last screenshot
             // TODO3: send to TG
             // TODO4*: check if selected area is inside Minecraft Window coordinates 
-        });
+        // });
     }
 }
