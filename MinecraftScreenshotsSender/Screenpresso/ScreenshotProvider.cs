@@ -6,18 +6,15 @@ public class ScreenshotProvider
 {
     private readonly ScreenshotsPathProvider _screenshotsPathProvider = new();
 
-    public void Provide()
+    public string? Provide()
     {
         var spScreenshotsPath = _screenshotsPathProvider.GetPath();
         DirectoryInfo directoryInfo = new DirectoryInfo(spScreenshotsPath);
         FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(key => key.CreationTime).ToArray();
-        FileInfo fileInfo = fileInfos[0]; // path to needed screenshot
-
-        // TODO: perhaps need to split last modified and last created? No?
-        var datetimeResidual = DateTime.Now - fileInfo.CreationTime;
-        if (datetimeResidual < TimeSpan.FromSeconds(5))
-        {
-            // TODO: get the screenshot or return the path to screenshot (depends on what is needed for the discord api)
-        }
+        FileInfo fileInfo = fileInfos[0]; // includes path to needed screenshot
+        var datetimeResidual = DateTime.Now - fileInfo.CreationTime; // TODO: perhaps need to split last modified and last created?
+        return datetimeResidual < TimeSpan.FromSeconds(10) 
+            ? fileInfo.FullName 
+            : null;
     }
 }
