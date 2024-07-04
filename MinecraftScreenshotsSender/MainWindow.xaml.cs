@@ -25,7 +25,7 @@ public partial class MainWindow : Window
             discordFileUploader.Upload(pathToFile);
             Console.WriteLine("Perfect! Time: " + DateTime.Now);
             
-            // TODO4*: check if selected area is inside Minecraft Window coordinates 
+            // TODO: check if selected area is inside Minecraft Window coordinates 
         });
     }
 }

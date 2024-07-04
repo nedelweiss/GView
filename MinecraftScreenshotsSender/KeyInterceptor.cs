@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using MinecraftScreenshotsSender.FileUtils;
 using MinecraftScreenshotsSender.Screenpresso;
 
 namespace MinecraftScreenshotsSender;
@@ -10,40 +11,42 @@ public class KeyInterceptor
     public delegate void PrintScreenHandler(string pathToFile);
 
     public event PrintScreenHandler OnPrintScreen;
-    
+
     private const int WhKeyboardLl = 13;
     private const int WmKeydown = 0x0100;
     private readonly IntPtr _hookId;
     private readonly HostedProcessFinder _hostedProcessFinder;
     private readonly FileSystemWatcher _fileSystemWatcher;
-    private LowLevelKeyboardProc _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
+
+    private LowLevelKeyboardProc
+        _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
 
     public KeyInterceptor()
     {
         _fileSystemWatcher = new FileSystemWatcher(new ScreenshotsPathProvider().GetPath());
-        
-        _fileSystemWatcher.NotifyFilter = NotifyFilters.Attributes
-            | NotifyFilters.CreationTime
-            | NotifyFilters.DirectoryName
-            | NotifyFilters.FileName
-            | NotifyFilters.LastAccess
-            | NotifyFilters.LastWrite
-            | NotifyFilters.Security
-            | NotifyFilters.Size;
-        
-        _fileSystemWatcher.IncludeSubdirectories = true;
+
+        _fileSystemWatcher.NotifyFilter = NotifyFilters.Attributes 
+                                          | NotifyFilters.CreationTime
+                                          | NotifyFilters.DirectoryName
+                                          | NotifyFilters.FileName
+                                          | NotifyFilters.LastAccess
+                                          | NotifyFilters.LastWrite
+                                          | NotifyFilters.Security
+                                          | NotifyFilters.Size;
+
+        _fileSystemWatcher.IncludeSubdirectories = false;
         _fileSystemWatcher.EnableRaisingEvents = true;
-        
+
         _proc = HookCallback;
         _hostedProcessFinder = new HostedProcessFinder();
         _hookId = SetHook(_proc);
     }
-    
+
     ~KeyInterceptor()
     {
         UnhookWindowsHookEx(_hookId);
     }
-    
+
     private static IntPtr SetHook(LowLevelKeyboardProc proc)
     {
         return SetWindowsHookEx(WhKeyboardLl, proc, IntPtr.Zero, 0);
@@ -57,33 +60,38 @@ public class KeyInterceptor
         string processTestMainWindowTitle = hostedProcess.MainWindowTitle;
 
         // TODO: get rid of second part in condition
-        if (processTestMainWindowTitle.Contains("Minecraft") && !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
+        var appTitle = System.Environment.GetEnvironmentVariable("WV2");
+        if (processTestMainWindowTitle.Contains(appTitle) &&
+            !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
         {
-            if (nCode >= 0 && wParam == WmKeydown) 
+            if (nCode >= 0 && wParam == WmKeydown)
             {
                 int keyCode = Marshal.ReadInt32(lParam);
-                Keys code = (Keys) keyCode;
+                Keys code = (Keys)keyCode;
                 if (code == Keys.PrintScreen)
                 {
-                    // TODO: check if event has no subscribers
-                    
-                    _fileSystemWatcher.Created += OnCreated;
+                    _fileSystemWatcher.Created += OnCreate;
                 }
             }
         }
 
         return CallNextHookEx(_hookId, nCode, wParam, lParam);
     }
-    
-    private void OnCreated(object sender, FileSystemEventArgs e)
+
+    private void OnCreate(object sender, FileSystemEventArgs eventArgs)
     {
-        var pathToFile = e.FullPath;
-        OnPrintScreen(pathToFile);
-        string value = $"Created: {pathToFile}";
-        
-        Console.WriteLine(value);
-        
-        _fileSystemWatcher.Created -= OnCreated;
+        var pathToFile = eventArgs.FullPath;
+        while (FileUsageChecker.IsFileLocked(new FileInfo(pathToFile)))
+        {
+            Task.Delay(10);
+        }
+
+        // TODO: check if event has no subscribers
+        OnPrintScreen(pathToFile); 
+
+        Console.WriteLine($"Created: {pathToFile}");
+
+        _fileSystemWatcher.Created -= OnCreate;
     }
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]

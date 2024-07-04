@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Nito.AsyncEx;
+using Nito.AsyncEx.Synchronous;
 
 namespace MinecraftScreenshotsSender.Discord;
 
@@ -8,7 +9,7 @@ public class DiscordFileUploader
 {
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
-    private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
+    private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("B_SC_CHANNEL_ID"));
     
     private readonly DiscordSocketClient _client = new();
     
@@ -24,7 +25,8 @@ public class DiscordFileUploader
         Console.WriteLine(caption);
         _client.GetGuild(ServerId)
             .GetTextChannel(ChannelId)
-            .SendFileAsync(path, caption);
+            .SendFileAsync(path, caption)
+            .WaitAndUnwrapException();
     }
 
     private async Task Upload()
