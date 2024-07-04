@@ -13,7 +13,7 @@ public class ScreenshotProvider
         FileInfo[] fileInfos = directoryInfo.GetFiles().OrderByDescending(key => key.CreationTime).ToArray();
         FileInfo fileInfo = fileInfos[0]; // includes path to needed screenshot
         var datetimeResidual = DateTime.Now - fileInfo.CreationTime; // TODO: perhaps need to split last modified and last created?
-        return datetimeResidual < TimeSpan.FromSeconds(10) 
+        return datetimeResidual < TimeSpan.FromSeconds(40) 
             ? fileInfo.FullName 
             : null;
     }

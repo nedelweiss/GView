@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
+using MinecraftScreenshotsSender.Screenpresso;
 
 namespace MinecraftScreenshotsSender;
 
 public class KeyInterceptor
 {
-    public delegate void PrintScreenHandler();
+    public delegate void PrintScreenHandler(string pathToFile);
 
     public event PrintScreenHandler OnPrintScreen;
     
@@ -13,10 +15,25 @@ public class KeyInterceptor
     private const int WmKeydown = 0x0100;
     private readonly IntPtr _hookId;
     private readonly HostedProcessFinder _hostedProcessFinder;
+    private readonly FileSystemWatcher _fileSystemWatcher;
     private LowLevelKeyboardProc _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
-    
+
     public KeyInterceptor()
     {
+        _fileSystemWatcher = new FileSystemWatcher(new ScreenshotsPathProvider().GetPath());
+        
+        _fileSystemWatcher.NotifyFilter = NotifyFilters.Attributes
+            | NotifyFilters.CreationTime
+            | NotifyFilters.DirectoryName
+            | NotifyFilters.FileName
+            | NotifyFilters.LastAccess
+            | NotifyFilters.LastWrite
+            | NotifyFilters.Security
+            | NotifyFilters.Size;
+        
+        _fileSystemWatcher.IncludeSubdirectories = true;
+        _fileSystemWatcher.EnableRaisingEvents = true;
+        
         _proc = HookCallback;
         _hostedProcessFinder = new HostedProcessFinder();
         _hookId = SetHook(_proc);
@@ -49,12 +66,24 @@ public class KeyInterceptor
                 if (code == Keys.PrintScreen)
                 {
                     // TODO: check if event has no subscribers
-                    OnPrintScreen();
+                    
+                    _fileSystemWatcher.Created += OnCreated;
                 }
             }
         }
 
         return CallNextHookEx(_hookId, nCode, wParam, lParam);
+    }
+    
+    private void OnCreated(object sender, FileSystemEventArgs e)
+    {
+        var pathToFile = e.FullPath;
+        OnPrintScreen(pathToFile);
+        string value = $"Created: {pathToFile}";
+        
+        Console.WriteLine(value);
+        
+        _fileSystemWatcher.Created -= OnCreated;
     }
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]

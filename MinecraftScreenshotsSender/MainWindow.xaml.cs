@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using MinecraftScreenshotsSender.Discord;
+using MinecraftScreenshotsSender.Screenpresso;
 using Nito.AsyncEx;
 
 namespace MinecraftScreenshotsSender;
@@ -14,16 +15,14 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-
-        // ScreenshotProvider screenshotProvider = new ScreenshotProvider();
-        // screenshotProvider.Provide();
-
         Console.WriteLine("Minecraft Screenshot Sender has been started...");
         
+        var discordFileUploader = new DiscordFileUploader();
+
         _keyInterceptor = new KeyInterceptor();
-        _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler(() =>
+        _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler((pathToFile) =>
         {
-            AsyncContext.Run(new DiscordFileUploader().Upload);
+            discordFileUploader.Upload(pathToFile);
             Console.WriteLine("Perfect! Time: " + DateTime.Now);
             
             // TODO4*: check if selected area is inside Minecraft Window coordinates 
