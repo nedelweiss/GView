@@ -9,7 +9,7 @@ public class DiscordFileUploader
 {
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
-    private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("B_SC_CHANNEL_ID"));
+    private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
     
     private readonly DiscordSocketClient _client = new();
     

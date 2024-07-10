@@ -60,8 +60,8 @@ public class KeyInterceptor
         string processTestMainWindowTitle = hostedProcess.MainWindowTitle;
 
         // TODO: get rid of second part in condition
-        var appTitle = System.Environment.GetEnvironmentVariable("WV2");
-        if (processTestMainWindowTitle.Contains(appTitle) &&
+        var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
+        if (processTestMainWindowTitle.Contains(gameTitle) &&
             !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
         {
             if (nCode >= 0 && wParam == WmKeydown)
