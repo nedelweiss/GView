@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinecraftScreenshotsSender", "MinecraftScreenshotsSender\MinecraftScreenshotsSender.csproj", "{54AC95AB-B071-49DB-8055-EA41C99328E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GView", "GView\GView.csproj", "{54AC95AB-B071-49DB-8055-EA41C99328E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

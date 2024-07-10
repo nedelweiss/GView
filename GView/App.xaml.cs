@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace MinecraftScreenshotsSender;
+namespace GView;
 
 /// <summary>
 /// Interaction logic for App.xaml

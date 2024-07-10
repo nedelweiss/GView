@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MinecraftScreenshotsSender.Screenpresso;
+namespace GView.Screenpresso;
 
 public class ScreenshotProvider
 {

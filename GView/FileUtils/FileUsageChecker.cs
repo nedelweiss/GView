@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MinecraftScreenshotsSender.FileUtils;
+namespace GView.FileUtils;
 
 public static class FileUsageChecker
 {

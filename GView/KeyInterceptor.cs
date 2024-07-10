@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using MinecraftScreenshotsSender.FileUtils;
-using MinecraftScreenshotsSender.Screenpresso;
+using GView.FileUtils;
+using GView.Screenpresso;
 
-namespace MinecraftScreenshotsSender;
+namespace GView;
 
 public class KeyInterceptor
 {
@@ -57,12 +57,13 @@ public class KeyInterceptor
     private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
     {
         Process hostedProcess = _hostedProcessFinder.Find();
-        string processTestMainWindowTitle = hostedProcess.MainWindowTitle;
+        string mainWindowTitle = hostedProcess.MainWindowTitle;
 
         // TODO: get rid of second part in condition
+        // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
         var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
-        if (processTestMainWindowTitle.Contains(gameTitle) &&
-            !processTestMainWindowTitle.Contains("MinecraftScreenshotsSender"))
+        if (mainWindowTitle.Contains(gameTitle) &&
+            !mainWindowTitle.Contains("MinecraftScreenshotsSender"))
         {
             if (nCode >= 0 && wParam == WmKeydown)
             {

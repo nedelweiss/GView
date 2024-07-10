@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using MinecraftScreenshotsSender.XmlParsing;
+using GView.XmlParsing;
 
-namespace MinecraftScreenshotsSender.Screenpresso;
+namespace GView.Screenpresso;
 
 public class ScreenshotsPathProvider
 {

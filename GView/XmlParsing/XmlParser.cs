@@ -1,6 +1,6 @@
 ﻿using System.Xml;
 
-namespace MinecraftScreenshotsSender.XmlParsing;
+namespace GView.XmlParsing;
 
 public class XmlParser
 {

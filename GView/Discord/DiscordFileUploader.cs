@@ -3,7 +3,7 @@ using Discord.WebSocket;
 using Nito.AsyncEx;
 using Nito.AsyncEx.Synchronous;
 
-namespace MinecraftScreenshotsSender.Discord;
+namespace GView.Discord;
 
 public class DiscordFileUploader
 {

@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using MinecraftScreenshotsSender.Discord;
-using MinecraftScreenshotsSender.Screenpresso;
+using GView.Discord;
+using GView.Screenpresso;
 using Nito.AsyncEx;
 
-namespace MinecraftScreenshotsSender;
+namespace GView;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
