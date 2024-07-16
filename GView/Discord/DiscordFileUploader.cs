@@ -7,10 +7,11 @@ namespace GView.Discord;
 
 public class DiscordFileUploader
 {
+    private const string DateTimeFormat = "dddd, d MMMM yyyy hh:mm tt";
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
     private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
-    
+
     private readonly DiscordSocketClient _client = new();
     
     public DiscordFileUploader()
@@ -21,7 +22,7 @@ public class DiscordFileUploader
     public void Upload(string? path)
     {
         if (path == null) return;
-        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now;
+        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(DateTimeFormat);
         Console.WriteLine(caption);
         _client.GetGuild(ServerId)
             .GetTextChannel(ChannelId)

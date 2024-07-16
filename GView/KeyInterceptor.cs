@@ -62,8 +62,7 @@ public class KeyInterceptor
         // TODO: get rid of second part in condition
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
         var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
-        if (mainWindowTitle.Contains(gameTitle) &&
-            !mainWindowTitle.Contains("MinecraftScreenshotsSender"))
+        if (mainWindowTitle.Contains(gameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
             {
