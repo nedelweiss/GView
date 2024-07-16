@@ -10,6 +10,7 @@ public class DiscordFileUploader
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
     private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
+    private const string TimeFormat = "dddd, d MMMM yyyy hh:mm tt";
     
     private readonly DiscordSocketClient _client = new();
     
@@ -21,7 +22,7 @@ public class DiscordFileUploader
     public void Upload(string? path)
     {
         if (path == null) return;
-        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString("dddd, d MMMM yyyy hh:mm tt");
+        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(TimeFormat);
         Console.WriteLine(caption);
         _client.GetGuild(ServerId)
             .GetTextChannel(ChannelId)
