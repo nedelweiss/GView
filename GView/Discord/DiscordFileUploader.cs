@@ -21,7 +21,7 @@ public class DiscordFileUploader
     public void Upload(string? path)
     {
         if (path == null) return;
-        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now;
+        var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString("dddd, d MMMM yyyy hh:mm tt");
         Console.WriteLine(caption);
         _client.GetGuild(ServerId)
             .GetTextChannel(ChannelId)
