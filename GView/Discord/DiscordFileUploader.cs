@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using GView.properties;
 using Nito.AsyncEx;
 using Nito.AsyncEx.Synchronous;
 
@@ -11,11 +12,13 @@ public class DiscordFileUploader
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
     private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
-
+    
+    private Properties _properties;
     private readonly DiscordSocketClient _client = new();
     
-    public DiscordFileUploader()
+    public DiscordFileUploader(Properties properties)
     {
+        _properties = properties;
         AsyncContext.Run(Upload);
     }
 
@@ -24,8 +27,8 @@ public class DiscordFileUploader
         if (path == null) return;
         var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(DateTimeFormat);
         Console.WriteLine(caption);
-        _client.GetGuild(ServerId)
-            .GetTextChannel(ChannelId)
+        _client.GetGuild(_properties.GetServerId())
+            .GetTextChannel(_properties.GetChannelId())
             .SendFileAsync(path, caption)
             .WaitAndUnwrapException();
     }
