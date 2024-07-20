@@ -9,12 +9,33 @@
         <TextBox Name="GameTitle"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,300" />
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="200,100,200,290">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Game Title
+            </AccessText>
+        </Label>
         <TextBox Name="ServerId"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,250" />
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="200,100,200,240">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Server ID
+            </AccessText>
+        </Label>
         <TextBox Name="ChannelId"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,200" />
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="200,100,200,190">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Channel ID
+            </AccessText>
+        </Label>
         <Button Name="ButtonSetCredential"
                 Content="Let`s go!"
                 HorizontalAlignment="Center"
