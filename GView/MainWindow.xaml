@@ -8,10 +8,10 @@
     <Grid>
         <TextBox Name="GameTitle"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,300">
+                 Margin="300,100,200,300" TextChanged="GameTitle_OnTextChanged">
             <TextBox.Text>
                 <Binding Path="GameTitle"
-                         UpdateSourceTrigger="PropertyChanged"/>
+                         UpdateSourceTrigger="Explicit"/>
             </TextBox.Text>
         </TextBox>
         <TextBox Name="ServerId"
@@ -19,7 +19,7 @@
                  Margin="300,100,200,250" >
             <TextBox.Text>
                 <Binding Path="ServerId"
-                         UpdateSourceTrigger="PropertyChanged"/>
+                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
             </TextBox.Text>
         </TextBox>
         <TextBox Name="ChannelId"
@@ -27,7 +27,7 @@
                  Margin="300,100,200,200">
             <TextBox.Text>
                 <Binding Path="ChannelId"
-                         UpdateSourceTrigger="PropertyChanged"/>
+                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
             </TextBox.Text>
         </TextBox>
     </Grid>

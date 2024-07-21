@@ -5,7 +5,7 @@ namespace GView.properties;
 
 public class Properties : INotifyPropertyChanged
 {
-    private string _gameTitle;
+    private string _gameTitle = "";
     private ulong _serverId;
     private ulong _channelId;
     

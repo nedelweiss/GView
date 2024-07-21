@@ -1,6 +1,9 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using GView.Discord;
 using GView.properties;
+using TextBox = System.Windows.Controls.TextBox;
+using Timer = System.Threading.Timer;
 
 namespace GView;
 
@@ -10,7 +13,8 @@ namespace GView;
 public partial class MainWindow : Window
 {
     private readonly KeyInterceptor _keyInterceptor;
-
+    private readonly Timer _timer;
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -31,5 +35,19 @@ public partial class MainWindow : Window
             
             // TODO: check if selected area is inside Minecraft Window coordinates 
         });
+        
+        _timer = new Timer(_ =>
+        {
+            // Dispatcher tells that this action has to be performed in the GUI thread
+            Dispatcher.Invoke(()=>{
+                var expression = GameTitle.GetBindingExpression(TextBox.TextProperty);
+                expression.UpdateSource();
+            });
+        });
+    }
+
+    private void GameTitle_OnTextChanged(object sender, TextChangedEventArgs e)
+    {
+        _timer.Change(TimeSpan.FromMilliseconds(500), Timeout.InfiniteTimeSpan);
     }
 }

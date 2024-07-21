@@ -63,11 +63,9 @@ public class KeyInterceptor
 
         // TODO: get rid of second part in condition
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
-
-        // TODO: global hook creates problems during realtime input process 
-        // var gameTitle = _properties.GameTitle;
-        // Console.WriteLine(_properties.ChannelId);
-        var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
+        
+        var gameTitle = _properties.GameTitle;
+        Console.WriteLine(gameTitle);
         if (mainWindowTitle.Contains(gameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
