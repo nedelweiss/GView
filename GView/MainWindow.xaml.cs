@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using GView.Discord;
+using GView.properties;
 
 namespace GView;
 
@@ -14,8 +15,11 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Console.WriteLine("Minecraft Screenshot Sender has been started...");
-        
-        var discordFileUploader = new DiscordFileUploader();
+
+        Properties properties = new Properties();
+        var discordFileUploader = new DiscordFileUploader(properties);
+        ServerId.DataContext = properties;
+        ChannelId.DataContext = properties;
 
         _keyInterceptor = new KeyInterceptor();
         _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler((pathToFile) =>

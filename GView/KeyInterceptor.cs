@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using GView.FileUtils;
-using GView.properties;
 using GView.Screenpresso;
 
 namespace GView;
@@ -62,9 +61,8 @@ public class KeyInterceptor
 
         // TODO: get rid of second part in condition
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
-        Properties gameTitle = new Properties();
-        // var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
-        if (mainWindowTitle.Contains(gameTitle.GameTitle)) 
+        var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
+        if (mainWindowTitle.Contains(gameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
             {

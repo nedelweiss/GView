@@ -8,7 +8,8 @@ public class Properties : INotifyPropertyChanged
     private string _gameTitle;
     private ulong _serverId;
     private ulong _channelId;
-    public event PropertyChangedEventHandler PropertyChanged;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public string GameTitle
     {
@@ -40,8 +41,8 @@ public class Properties : INotifyPropertyChanged
         }
     }
 
-    protected void OnPropertyChanged([CallerMemberName] string _gameTitle = null)
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this._gameTitle));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
