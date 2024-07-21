@@ -1,30 +1,56 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
 namespace GView.properties;
 
-public class Properties
+public class Properties : INotifyPropertyChanged
 {
-    private readonly string _gameTitle;
-    private readonly ulong _serverId;
-    private readonly ulong _channelId;
+    private string _gameTitle;
+    private ulong _serverId;
+    private ulong _channelId;
+    
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-    public Properties(string gameTitle, ulong serverId, ulong channelId)
+    public string GameTitle
     {
-        _gameTitle = gameTitle;
-        _serverId = serverId;
-        _channelId = channelId;
+        get => _gameTitle;
+        set
+        {
+            _gameTitle = value;
+            OnPropertyChanged();
+        }
     }
 
-    public string GetGameTitle()
+    public ulong ServerId
     {
-        return _gameTitle;
+        get => _serverId;
+        set
+        {
+            _serverId = Convert.ToUInt64(value);
+            OnPropertyChanged();
+        }
     }
 
-    public ulong GetServerId()
+    public ulong ChannelId 
     {
-        return _serverId;
+        get => _channelId;
+        set
+        {
+            _channelId = Convert.ToUInt64(value);
+            OnPropertyChanged();
+        }
     }
 
-    public ulong GetChannelId()
+    // for ENVS
+    // public Properties(string gameTitle, ulong serverId, ulong channelId)
+    // {
+    //     _gameTitle = gameTitle;
+    //     _serverId = serverId;
+    //     _channelId = channelId;
+    // }
+
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
-        return _channelId;
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

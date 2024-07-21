@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Discord;
 using Discord.WebSocket;
 using GView.properties;
 using Nito.AsyncEx;
@@ -10,11 +12,11 @@ public class DiscordFileUploader
 {
     private const string DateTimeFormat = "dddd, d MMMM yyyy hh:mm tt";
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
-    private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
-    private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
+    // private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
+    // private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
     
-    private Properties _properties;
     private readonly DiscordSocketClient _client = new();
+    private readonly Properties _properties;
     
     public DiscordFileUploader(Properties properties)
     {
@@ -26,9 +28,14 @@ public class DiscordFileUploader
     {
         if (path == null) return;
         var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(DateTimeFormat);
-        Console.WriteLine(caption);
-        _client.GetGuild(_properties.GetServerId())
-            .GetTextChannel(_properties.GetChannelId())
+
+        var serverId = _properties.ServerId;
+        var channelId = _properties.ChannelId;
+        Console.WriteLine(serverId);
+        Console.WriteLine(channelId);
+        
+        _client.GetGuild(serverId)
+            .GetTextChannel(channelId)
             .SendFileAsync(path, caption)
             .WaitAndUnwrapException();
     }

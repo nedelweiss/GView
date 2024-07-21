@@ -26,8 +26,8 @@ public class KeyInterceptor
     public KeyInterceptor(Properties properties)
     {
         _properties = properties;
+        
         _fileSystemWatcher = new FileSystemWatcher(new ScreenshotsPathProvider().GetPath());
-
         _fileSystemWatcher.NotifyFilter = NotifyFilters.Attributes 
                                           | NotifyFilters.CreationTime
                                           | NotifyFilters.DirectoryName
@@ -36,7 +36,6 @@ public class KeyInterceptor
                                           | NotifyFilters.LastWrite
                                           | NotifyFilters.Security
                                           | NotifyFilters.Size;
-
         _fileSystemWatcher.IncludeSubdirectories = false;
         _fileSystemWatcher.EnableRaisingEvents = true;
 
@@ -64,7 +63,12 @@ public class KeyInterceptor
 
         // TODO: get rid of second part in condition
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
-        if (mainWindowTitle.Contains(_properties.GetGameTitle())) 
+
+        // TODO: global hook creates problems during realtime input process 
+        // var gameTitle = _properties.GameTitle;
+        // Console.WriteLine(_properties.ChannelId);
+        var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
+        if (mainWindowTitle.Contains(gameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
             {

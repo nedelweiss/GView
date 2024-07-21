@@ -8,18 +8,27 @@
     <Grid>
         <TextBox Name="GameTitle"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,300" />
+                 Margin="300,100,200,300">
+            <TextBox.Text>
+                <Binding Path="GameTitle"
+                         UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
         <TextBox Name="ServerId"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,250" />
+                 Margin="300,100,200,250" >
+            <TextBox.Text>
+                <Binding Path="ServerId"
+                         UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
         <TextBox Name="ChannelId"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,200" />
-        <Button Name="ButtonSetCredential"
-                Content="Let`s go!"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
-                Margin="100,100,50,100"
-                Click="SetCredential_Click" />
+                 Margin="300,100,200,200">
+            <TextBox.Text>
+                <Binding Path="ChannelId"
+                         UpdateSourceTrigger="PropertyChanged"/>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </Window>
