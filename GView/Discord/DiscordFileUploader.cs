@@ -13,12 +13,10 @@ public class DiscordFileUploader
     private static readonly ulong ServerId = Convert.ToUInt64(Environment.GetEnvironmentVariable("SERVER_ID"));
     private static readonly ulong ChannelId = Convert.ToUInt64(Environment.GetEnvironmentVariable("CHANNEL_ID"));
     
-    private Properties _properties;
     private readonly DiscordSocketClient _client = new();
     
-    public DiscordFileUploader(Properties properties)
+    public DiscordFileUploader()
     {
-        _properties = properties;
         AsyncContext.Run(Upload);
     }
 
@@ -26,9 +24,10 @@ public class DiscordFileUploader
     {
         if (path == null) return;
         var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(DateTimeFormat);
+        Properties properties = new Properties();
         Console.WriteLine(caption);
-        _client.GetGuild(_properties.GetServerId())
-            .GetTextChannel(_properties.GetChannelId())
+        _client.GetGuild(properties.ServerId)
+            .GetTextChannel(properties.ServerId)
             .SendFileAsync(path, caption)
             .WaitAndUnwrapException();
     }

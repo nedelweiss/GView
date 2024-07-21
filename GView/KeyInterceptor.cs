@@ -18,14 +18,12 @@ public class KeyInterceptor
     private readonly IntPtr _hookId;
     private readonly HostedProcessFinder _hostedProcessFinder;
     private readonly FileSystemWatcher _fileSystemWatcher;
-    private readonly Properties _properties;
 
     private LowLevelKeyboardProc
         _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
 
-    public KeyInterceptor(Properties properties)
+    public KeyInterceptor()
     {
-        _properties = properties;
         _fileSystemWatcher = new FileSystemWatcher(new ScreenshotsPathProvider().GetPath());
 
         _fileSystemWatcher.NotifyFilter = NotifyFilters.Attributes 
@@ -64,7 +62,9 @@ public class KeyInterceptor
 
         // TODO: get rid of second part in condition
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
-        if (mainWindowTitle.Contains(_properties.GetGameTitle())) 
+        Properties gameTitle = new Properties();
+        // var gameTitle = System.Environment.GetEnvironmentVariable("GAME_TITLE");
+        if (mainWindowTitle.Contains(gameTitle.GameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
             {
