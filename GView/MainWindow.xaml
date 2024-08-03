@@ -3,10 +3,32 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GView"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="500" Width="800">
     <Grid>
-
+        <TextBox Name="GameTitle"
+                 VerticalAlignment="Bottom"
+                 Margin="300,100,200,300" TextChanged="GameTitle_OnTextChanged">
+            <TextBox.Text>
+                <Binding Path="GameTitle"
+                         UpdateSourceTrigger="Explicit"/>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox Name="ServerId"
+                 VerticalAlignment="Bottom"
+                 Margin="300,100,200,250" >
+            <TextBox.Text>
+                <Binding Path="ServerId"
+                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
+            </TextBox.Text>
+        </TextBox>
+        <TextBox Name="ChannelId"
+                 VerticalAlignment="Bottom"
+                 Margin="300,100,200,200">
+            <TextBox.Text>
+                <Binding Path="ChannelId"
+                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
+            </TextBox.Text>
+        </TextBox>
     </Grid>
 </Window>
