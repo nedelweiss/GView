@@ -6,6 +6,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800">
     <Grid>
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="220,100,200,288">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Game Title
+            </AccessText>
+        </Label>
         <TextBox Name="GameTitle"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,300" TextChanged="GameTitle_OnTextChanged">
@@ -14,6 +21,13 @@
                          UpdateSourceTrigger="Explicit"/>
             </TextBox.Text>
         </TextBox>
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="220,100,200,238">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Server ID
+            </AccessText>
+        </Label>
         <TextBox Name="ServerId"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,250" >
@@ -22,6 +36,13 @@
                          UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
             </TextBox.Text>
         </TextBox>
+        <Label Height="35" Width="90" HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Margin="220,100,200,188">
+            <AccessText TextWrapping="WrapWithOverflow">
+                Channel ID
+            </AccessText>
+        </Label>
         <TextBox Name="ChannelId"
                  VerticalAlignment="Bottom"
                  Margin="300,100,200,200">

@@ -15,7 +15,7 @@ Also, you need to set BOT_TOKEN to windows envs. See 3 options above.
 - C# 12.0
 - .Net 8.0
 - WPF
-- Discord API, Discord.Net
+- Discord API, Discord.Net, Discord Bots
 - FileSystemWatcher
 - Nito.AsyncEx (A helper library for the Task-Based Asynchronous Pattern (TAP)); ```https://github.com/StephenCleary/AsyncEx```
 
