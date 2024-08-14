@@ -6,7 +6,7 @@ using Microsoft.Win32;
 using TextBox = System.Windows.Controls.TextBox;
 using Timer = System.Threading.Timer;
 
-namespace GView; // test
+namespace GView;
 
 public partial class MainWindow : Window
 {
