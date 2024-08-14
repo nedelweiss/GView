@@ -3,8 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:gView="clr-namespace:GView"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800">
+    <Window.Resources>
+        <gView:UlongToStringConverter x:Key="ULongToStringConverter"/>
+    </Window.Resources>
     <Grid>
         <Label Height="35" Width="90" HorizontalAlignment="Left"
                VerticalAlignment="Bottom"
@@ -15,7 +19,8 @@
         </Label>
         <TextBox Name="GameTitle"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,300" TextChanged="GameTitle_OnTextChanged">
+                 Margin="300,100,200,300" 
+                 TextChanged="GameTitle_OnTextChanged">
             <TextBox.Text>
                 <Binding Path="GameTitle"
                          UpdateSourceTrigger="Explicit"/>
@@ -30,10 +35,11 @@
         </Label>
         <TextBox Name="ServerId"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,250" >
+                 Margin="300,100,200,250" 
+                 TextChanged="GameTitle_OnTextChanged">
             <TextBox.Text>
-                <Binding Path="ServerId"
-                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
+                <Binding Path="ServerId" Converter="{StaticResource ULongToStringConverter}" 
+                         UpdateSourceTrigger="Explicit"/>
             </TextBox.Text>
         </TextBox>
         <Label Height="35" Width="90" HorizontalAlignment="Left"
@@ -45,10 +51,11 @@
         </Label>
         <TextBox Name="ChannelId"
                  VerticalAlignment="Bottom"
-                 Margin="300,100,200,200">
+                 Margin="300,100,200,200"
+                 TextChanged="GameTitle_OnTextChanged">
             <TextBox.Text>
-                <Binding Path="ChannelId"
-                         UpdateSourceTrigger="PropertyChanged" Mode="OneWayToSource"/>
+                <Binding Path="ChannelId" Converter="{StaticResource ULongToStringConverter}"
+                         UpdateSourceTrigger="Explicit"/>
             </TextBox.Text>
         </TextBox>
     </Grid>

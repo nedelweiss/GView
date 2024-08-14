@@ -5,7 +5,7 @@ namespace GView.properties;
 
 public class Properties : INotifyPropertyChanged
 {
-    private string _gameTitle = "";
+    private string _gameTitle = ""; // TODO: make sure that u won't need empty string
     private ulong _serverId;
     private ulong _channelId;
     
@@ -40,14 +40,6 @@ public class Properties : INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-
-    // for ENVS
-    // public Properties(string gameTitle, ulong serverId, ulong channelId)
-    // {
-    //     _gameTitle = gameTitle;
-    //     _serverId = serverId;
-    //     _channelId = channelId;
-    // }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

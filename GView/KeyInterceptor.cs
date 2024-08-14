@@ -20,8 +20,7 @@ public class KeyInterceptor
     private readonly FileSystemWatcher _fileSystemWatcher;
     private readonly Properties _properties;
 
-    private LowLevelKeyboardProc
-        _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
+    private LowLevelKeyboardProc _proc; // don't convert it into a local variable cuz of this problem https://stackoverflow.com/questions/6193711/call-has-been-made-on-garbage-collected-delegate-in-c
 
     public KeyInterceptor(Properties properties)
     {
@@ -65,7 +64,6 @@ public class KeyInterceptor
         // TODO: compare GAME_TITLE and title of the current active process (mainWindowTitle) as case insensitive
         
         var gameTitle = _properties.GameTitle;
-        Console.WriteLine(gameTitle);
         if (mainWindowTitle.Contains(gameTitle)) 
         {
             if (nCode >= 0 && wParam == WmKeydown)
