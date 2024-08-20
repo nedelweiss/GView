@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
 using GView.properties;
 using Nito.AsyncEx;
@@ -27,15 +25,20 @@ public class DiscordFileUploader
         if (path == null) return;
         var caption = "Made by " + Environment.UserName + ": " + DateTime.Now.ToString(DateTimeFormat);
 
-        var serverId = _properties.ServerId;
-        var channelId = _properties.ChannelId;
-        Console.WriteLine(serverId);
-        Console.WriteLine(channelId);
-        
-        _client.GetGuild(serverId)
-            .GetTextChannel(channelId)
-            .SendFileAsync(path, caption)
-            .WaitAndUnwrapException();
+        try
+        {
+            _client.GetGuild(_properties.ServerId)
+                .GetTextChannel(_properties.ChannelId)
+                .SendFileAsync(path, caption)
+                .WaitAndUnwrapException();
+        }
+        catch (Exception exception)
+        {
+            // File.AppendAllText(PathToErrorLogFile, exception.Message + "\n");
+            // File.AppendAllText(PathToErrorLogFile, exception.StackTrace + "\n");
+            // TODO: log the exception to file or handle the exception 
+            throw;
+        }
     }
 
     private async Task Upload()
@@ -47,6 +50,8 @@ public class DiscordFileUploader
 
     private Task Log(LogMessage logMessage)
     {
+        // TODO: 
+        // File.WriteAllText(PathToErrorLogFile, logMessage + "\n"); // need to rewrite file after app run
         Console.WriteLine(logMessage.ToString());
         return Task.CompletedTask;
     }

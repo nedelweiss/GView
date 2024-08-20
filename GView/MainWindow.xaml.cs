@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using GView.Discord;
 using GView.properties;
@@ -14,6 +15,12 @@ public partial class MainWindow : Window
     private const string GameTitleRKey = "GameTitle";
     private const string ServerIdRKey = "ServerId";
     private const string ChannelIdRKey = "ChannelId";
+    private const string MainAppDir = "GView";
+    private const string MainErrorLogFileName = "main_error_log.txt";
+    
+    private static readonly string ApplicationDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+    private static readonly string GViewDirPath = Path.Combine(ApplicationDataDirectory, MainAppDir);
+    private static readonly string PathToErrorLogFile = Path.Combine(GViewDirPath, MainErrorLogFileName);
     
     private readonly KeyInterceptor _keyInterceptor;
     private readonly Timer _timer;
@@ -22,6 +29,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         Console.WriteLine("Minecraft Screenshot Sender has been started...");
+        
+        AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogExceptionToAppData);
         
         _timer = new Timer(_ =>
         {
@@ -53,6 +62,14 @@ public partial class MainWindow : Window
             
             // TODO: check if selected area is inside f.e. Minecraft Window coordinates 
         });
+    }
+    
+    private void LogExceptionToAppData(object sender, UnhandledExceptionEventArgs args)
+    {
+        Exception exception = (Exception) args.ExceptionObject;
+        Directory.CreateDirectory(GViewDirPath);
+        File.AppendAllText(PathToErrorLogFile, exception.Message + "\n");
+        File.AppendAllText(PathToErrorLogFile, exception.StackTrace + "\n");
     }
 
     private void WriteToRegistry()
