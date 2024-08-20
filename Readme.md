@@ -22,13 +22,18 @@ Also, you need to set BOT_TOKEN to windows envs. See 3 options above.
 ## Build, Run & Exe file creation
 JetBrains Rider IDE was used for developing so, just ```open``` a Solution (GView.sln) and press ```Run```.
 To build exe file you need to click right on your Solution & select ```Publish``` option.
-Click it, choose ```Local Folder``` and then select a target runtime as ```win-x64```, deployment mode as ```Self-Contained(?)```
+Click it, choose ```Local Folder``` and then select a target runtime as ```win-x64```, deployment mode as ```Framework-Dependent(?)```
 and there are checkboxes:
 1. produce single file
 2. include native libraries for self extract(?)
 3. enable ReadyToRun compilation(?)
+4. delete existing files
 
 (check these options) and click run.
+
+## Logging
+Application save logs to 
+```${YOUR_WIN_PARTITION}:\Users\${YOUR_USER_DIRECTORY}\AppData\Local\GView```
 
 ## C# Events
 - ```https://stackoverflow.com/questions/623451/how-can-i-make-my-own-event-in-c```
