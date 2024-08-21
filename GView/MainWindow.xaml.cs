@@ -58,7 +58,7 @@ public partial class MainWindow : Window
         _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler((pathToFile) =>
         {
             discordFileUploader.Upload(pathToFile);
-            Console.WriteLine("Perfect! Time: " + DateTime.Now);
+            Console.WriteLine("Uploading to Discord functionality has been completed: " + DateTime.Now);
             
             // TODO: check if selected area is inside f.e. Minecraft Window coordinates 
         });

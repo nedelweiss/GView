@@ -11,7 +11,9 @@ public class UlongToStringConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is not ulong) return value;
+        if (value is not ulong) 
+            return value;
+        
         return ((ulong) value == 0 
             ? string.Empty 
             : value.ToString()) 
@@ -20,7 +22,9 @@ public class UlongToStringConverter : IValueConverter
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is not string) return value;
+        if (value is not string || ReferenceEquals(value, string.Empty)) 
+            return value;
+        
         string? str = value.ToString();
         return str != null ? ulong.Parse(str) : value;
     }
