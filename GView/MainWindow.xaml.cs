@@ -15,19 +15,24 @@ public partial class MainWindow : Window
     private const string GameTitleRKey = "GameTitle";
     private const string ServerIdRKey = "ServerId";
     private const string ChannelIdRKey = "ChannelId";
-    private const string MainAppDir = "GView";
     private const string MainErrorLogFileName = "main_error_log.txt";
-    
-    private static readonly string ApplicationDataDirectory = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-    private static readonly string GViewDirPath = Path.Combine(ApplicationDataDirectory, MainAppDir);
-    private static readonly string PathToErrorLogFile = Path.Combine(GViewDirPath, MainErrorLogFileName);
     
     private readonly KeyInterceptor _keyInterceptor;
     private readonly Timer _timer;
     
     public MainWindow()
     {
+        Directory.CreateDirectory(Utils.FileUtils.GViewDirPath);
+        
+        var properties = CreatePropertiesFromRegistry();
+        var discordFileUploader = new DiscordFileUploader(properties);
+        
         InitializeComponent();
+        
+        ServerId.DataContext = properties;
+        GameTitle.DataContext = properties;
+        ChannelId.DataContext = properties;
+        
         Console.WriteLine("Minecraft Screenshot Sender has been started...");
         
         AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(LogExceptionToAppData);
@@ -46,14 +51,7 @@ public partial class MainWindow : Window
                 WriteToRegistry();
             });
         });
-
-        var properties = CreatePropertiesFromRegistry();
-        ServerId.DataContext = properties;
-        GameTitle.DataContext = properties;
-        ChannelId.DataContext = properties;
         
-        var discordFileUploader = new DiscordFileUploader(properties);
-
         _keyInterceptor = new KeyInterceptor(properties);
         _keyInterceptor.OnPrintScreen += new KeyInterceptor.PrintScreenHandler((pathToFile) =>
         {
@@ -67,9 +65,8 @@ public partial class MainWindow : Window
     private void LogExceptionToAppData(object sender, UnhandledExceptionEventArgs args)
     {
         Exception exception = (Exception) args.ExceptionObject;
-        Directory.CreateDirectory(GViewDirPath);
-        File.AppendAllText(PathToErrorLogFile, exception.Message + "\n");
-        File.AppendAllText(PathToErrorLogFile, exception.StackTrace + "\n");
+        var exceptionLog = $"{exception.Message}\n{exception.StackTrace}\n";
+        Utils.FileUtils.WriteToFile(MainErrorLogFileName, exceptionLog);
     }
 
     private void WriteToRegistry()

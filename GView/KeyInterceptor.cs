@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using GView.FileUtils;
+using GView.Utils;
 using GView.properties;
 using GView.Screenpresso;
 
@@ -90,8 +90,6 @@ public class KeyInterceptor
 
         // TODO: check if event has no subscribers
         OnPrintScreen(pathToFile); 
-
-        Console.WriteLine($"Created: {pathToFile}");
 
         _fileSystemWatcher.Created -= OnCreate;
     }

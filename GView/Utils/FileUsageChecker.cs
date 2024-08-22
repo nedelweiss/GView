@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace GView.FileUtils;
+namespace GView.Utils;
 
 public static class FileUsageChecker
 {

@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using GView.properties;
+using GView.Utils;
 using Nito.AsyncEx;
 using Nito.AsyncEx.Synchronous;
 
@@ -9,6 +10,8 @@ namespace GView.Discord;
 public class DiscordFileUploader
 {
     private const string DateTimeFormat = "dddd, d MMMM yyyy hh:mm tt";
+    private const string DsErrorLogsFileName = "discord_error_logs.txt";
+    private const string DsLogsFileName = "discord_logs.txt";
     private static readonly string? BotToken = Environment.GetEnvironmentVariable("BOT_TOKEN");
     
     private readonly DiscordSocketClient _client = new();
@@ -34,9 +37,7 @@ public class DiscordFileUploader
         }
         catch (Exception exception)
         {
-            // File.AppendAllText(PathToErrorLogFile, exception.Message + "\n");
-            // File.AppendAllText(PathToErrorLogFile, exception.StackTrace + "\n");
-            // TODO: log the exception to file or handle the exception 
+            FileUtils.AppendToFile(DsErrorLogsFileName, $"{exception.Message}\n{exception.StackTrace}\n");
             throw;
         }
     }
@@ -50,8 +51,7 @@ public class DiscordFileUploader
 
     private Task Log(LogMessage logMessage)
     {
-        // TODO: 
-        // File.WriteAllText(PathToErrorLogFile, logMessage + "\n"); // need to rewrite file after app run
+        FileUtils.AppendToFile(DsLogsFileName, $"{logMessage}\n");
         Console.WriteLine(logMessage.ToString());
         return Task.CompletedTask;
     }
